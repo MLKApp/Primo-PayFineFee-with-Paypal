@@ -1,0 +1,137 @@
+<?php
+/**
+* Patrons submit library ID, and their fine/fee balance will be sent to Paypal.
+*
+*
+*/
+require_once "configure.php";
+require_once "almaUpdate.php";
+
+//$ppurl = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+$ppurl = "https://www.paypal.com/cgi-bin/webscr";
+
+$message = "";
+
+if (isset($_POST['uid']) && !empty($_POST['uid']))
+{
+	$uid = trim($_POST['uid']);
+	$alma = new AlmaUpdate();
+	$response = $alma->getFine($uid);
+	$result = simplexml_load_string($response);
+	//print_r($result);
+
+	if (isset($result['total_sum']))
+	{	$fees = trim($result['total_sum']);
+
+		if ($fees == 0)
+		{	$message = "Your fee balance is 0. You'll be redirected back to OneSearch.";
+			//header back to Primo account
+			header("Refresh: 8; url=$primo_return");
+
+		} else
+		{	$message = "Your fee balance is $".$fees.". You'll be redirected to Paypal for payment process.";
+			//set Paypal url query string with user id and payment amount here
+			$ppvars .= "&amount=$fees";
+
+			//custom field carries patrons' ID passed to Paypal and Paypl will send it back so that we could
+			//use patrons' ID to update Alma's user account. Here using XXXX to prefix patrons' ID.
+			$ppvars .= "&custom=XXXX$uid";
+
+			header ("Refresh: 1; url=$ppurl?$ppvars");
+
+		}
+	} else {
+		if (isset($result->errorsExist) && $result->errorsExist)
+		{
+			$err = (string) $result->errorList->error->errorCode;
+			$errorMessage = (string) $result->errorList->error->errorMessage;
+			switch ($err) {
+			    case '401861' :
+			        $message = "$errorMessage Please try again.";
+        			break;
+				default:
+        			$message = "Sorry, something is wrong. Please contact our librarians for payment errors.";
+        	}
+		} else {
+			$message = "Sorry, please contact our librarians for payment assistance.";
+
+		}
+
+	}
+
+} else {
+	$message = "Please enter your Library ID.";
+
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>SJSU OneSearch King Library Pay Fine.</title>
+	<style>
+	body {
+		font-family: Source Sans Pro,Helvetica Neue,Helvetica,Arial,sans-serif;
+    	font-size: 15px;
+    }
+
+	#instruction {
+		font-size: 20px;
+		padding-left: 10%;
+		padding-top: 5%;
+    }
+
+    #content {
+		padding-left: 35%;
+		padding-top: 15%;
+    }
+
+    #message {
+		font-size: 18px;
+		color: grey;
+    }
+
+    #form {
+		padding-top: 5%;
+    }
+
+    #ppButton {
+		vertical-align: bottom;
+    }
+
+    #ppID {
+    	height: 23px;;
+		vertical-align: bottom;
+    }
+
+	</style>
+</head>
+<body>
+<div id="banner">
+	<img class="logo-image" src="https://sjsu-primo.hosted.exlibrisgroup.com/primo-explore/custom/01CALS_SJO/img/library-logo.png" alt="The library Logo">
+</div>
+<div id='instruction'>
+	Welcome to the OneSearch Pay Fines page.
+	<ul><li>SJSU patrons will need to enter their 9-digit SJSU ID number below.</li>
+	<li>San Jose Public Library patrons will need to enter their 14-digit SJPL library card barcode number below.</li>
+	<li>There are no refunds for SJSU fines. If you have questions about this charge please contact SJSU Library at 1-408-808-2000 before paying the fine.</li>
+	</ul>
+</div>
+
+<div id='content'>
+<div id='message'>
+<?php
+	echo $message;
+?>
+</div>
+  <div id='form'>
+<form name='pay' method='post' action='form.htm'>
+    <label>Your Library ID:</label><br/>
+    <input id='ppID' type="text" name="uid" maxlength="20">
+   	<input id='ppButton' type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but06.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+</form>
+	</div>
+</div>
+</body>
+</html>
