@@ -22,11 +22,11 @@ The instruction consists of three parts of setup:
 * Primo setup
 
 Code setup
-1, download all files to your apache htdoc. 
-2, modify configure.php, replace $primo_return [] with your campus data
+* download all files to your apache htdoc. 
+* modify configure.php, replace $primo_return [] with your campus data
 $primo_return = 'https://[YOUR PRIMO SITE]/primo-explore/account?vid=[YOUR PRIMO CAMPUS VID]&sortby=rank&lang=en_US&section=overview';
-3, modify almaUpdae.php, replace $apikey with your own alma apikey
-4, in Paypal setup below, need to modify configure.php variable $auth_token and $ppvars with Paypal information
+* modify almaUpdae.php, replace $apikey with your own alma apikey
+* in Paypal setup below, need to modify configure.php variable $auth_token and $ppvars with Paypal information
 
 
 Paypale setup
