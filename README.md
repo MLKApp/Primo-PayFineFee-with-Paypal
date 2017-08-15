@@ -64,4 +64,17 @@ Primo setup
 * a PAY FINE link will show up in patrons' Primo My Library Card Fine+Fee section
 
 
+CREDITS
+
+This application uses Open Source components. You can find the source code of their open source projects along 
+with license information below. We acknowledge and are grateful to these developers for their contributions to 
+open source.
+
+Project: paypal/pdt-code-samples https://github.com/paypal/pdt-code-samples
+License https://github.com/paypal/pdt-code-samples/blob/master/LICENSE.txt
+
+Project: PHP-PayPal-IPN https://github.com/Quixotix/PHP-PayPal-IPN
+Copyright (c) 2012, Micah Carrick
+All rights reserved.
+License https://github.com/Quixotix/PHP-PayPal-IPN/blob/master/LICENSE
 
