@@ -10,6 +10,7 @@ $primo_return = 'https://[YOUR PRIMO SITE]/primo-explore/account?vid=[YOUR PRIMO
 * Replace [] with your buy now button html query string.
 */
 $ppvars = "[This is buy now paypal button html query string]";
+$ppvars .= "&return=https://[Your Apache/PHP server]/[path to script]/pdt.php";
 
 /**
 * Paypal Identity token for Payment Data Transfer.
