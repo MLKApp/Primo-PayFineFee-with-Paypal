@@ -51,7 +51,7 @@ Paypale setup
 * check Take customers to this URL when they cancel their checkout, and enter $primo_return url from above Code setup section here.
 * click the Save Changes button
 * on Add your button code to your webpage page, select Email tab
-* copy url query string starting after ? to end of url, and paste it to configure.php as value of $ppvars
+* copy url query string starting after ? to end of url, and paste it to configure.php line 12 as value of $ppvars
 * you could log out paypal account now.
 
 Primo setup
